@@ -1,5 +1,7 @@
 package mm.java.learning;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * @ClassName TrafficLight
  * @Description 力扣1279 红绿灯路口
@@ -8,8 +10,14 @@ package mm.java.learning;
  * @Version 1.0
  **/
 public class TrafficLight {
-    public TrafficLight() {
+    private Semaphore greenLight;
+    private boolean road1CanGo;
+    private boolean road2CanGo;
 
+    public TrafficLight() {
+        this.greenLight = new Semaphore(1, true);
+        this.road1CanGo = true;
+        this.road2CanGo = false;
     }
 
     public void carArrived(
@@ -19,6 +27,23 @@ public class TrafficLight {
             Runnable turnGreen, // Use turnGreen.run() to turn light to green on current road
             Runnable crossCar // Use crossCar.run() to make car cross the intersection
     ) {
-
+        try {
+            greenLight.acquire();
+            if ((roadId == 1 && road1CanGo) || (roadId == 2 || road2CanGo)) crossCar.run();
+            else if (roadId == 1 && !road1CanGo) {
+                turnGreen.run();
+                road1CanGo = true;
+                road2CanGo = false;
+                crossCar.run();
+            } else if (roadId == 2 && !road2CanGo) {
+                turnGreen.run();
+                road2CanGo = true;
+                road1CanGo = false;
+                crossCar.run();
+            }
+            greenLight.release();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
