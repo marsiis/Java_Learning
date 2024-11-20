@@ -4,26 +4,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Solution {
-    public int romanToInt(String s) {
+    public boolean canConstruct(String ransomNote, String magazine) {
         Map<Character, Integer> map = new HashMap<>();
-        map.put('I', 1);
-        map.put('V', 5);
-        map.put('X', 10);
-        map.put('L', 50);
-        map.put('C', 100);
-        map.put('D', 500);
-        map.put('M', 1000);
 
-        int ans = 0;
-        int n = s.length();
-        for (int i = 0; i < n; i++) {
-            int value = map.get(s.charAt(i));
-            if (i < n - 1 && value > map.get(s.charAt(i + 1))) {
-                ans += value;
+        for (char c : magazine.toCharArray()) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+        for (int i = 0; i < ransomNote.length(); i++) {
+            if (map.getOrDefault(ransomNote.charAt(i), 0) >= 1) {
+                map.put(ransomNote.charAt(i), map.get(ransomNote.charAt(i)) - 1);
             } else {
-                ans -= value;
+                return false;
             }
         }
-        return ans;
+        return true;
     }
 }
