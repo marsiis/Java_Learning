@@ -14,18 +14,15 @@ public class T2 {
         Scanner sc = new Scanner(System.in);
         String line = sc.nextLine();
 
-        Map<Character, Integer> map = new HashMap<Character, Integer>();
+        Map<Character, Integer> map = new HashMap<>();
         for (char ch : line.toCharArray()) {
             map.put(ch, map.getOrDefault(ch, 0) + 1);
         }
 
-        List<Map.Entry<Character, Integer>> items = new ArrayList(map.entrySet());
-        items.sort(new Comparator<Map.Entry<Character, Integer>>() {
-            @Override
-            public int compare(Map.Entry<Character, Integer> o1, Map.Entry<Character, Integer> o2) {
-                if (!Objects.equals(o1.getValue(), o2.getValue())) return o2.getValue() - o1.getValue();
-                else return o1.getKey() - o2.getKey();
-            }
+        List<Map.Entry<Character, Integer>> items = new ArrayList<>(map.entrySet());
+        items.sort((o1, o2) -> {
+            if (!Objects.equals(o1.getValue(), o2.getValue())) return o2.getValue() - o1.getValue();
+            else return o1.getKey() - o2.getKey();
         });
 
         for (Map.Entry<Character, Integer> entry : items) {
@@ -33,5 +30,4 @@ public class T2 {
         }
         System.out.println();
     }
-
 }
